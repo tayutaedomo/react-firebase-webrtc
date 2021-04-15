@@ -1,4 +1,12 @@
-import React, { Dispatch, SetStateAction, VFC } from 'react';
+import React, {
+  Dispatch,
+  KeyboardEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+  VFC,
+} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -47,8 +55,27 @@ type Props = {
 };
 
 const InputFromLocal: VFC<Props> = (props) => {
+  const { localPeerName, setLocalPeerName } = props;
   const label = 'your name';
   const classes = useStyles();
+  const [disabled, setDisabled] = useState(true);
+  const [name, setName] = useState('');
+  const [isComposed, setIsComposed] = useState(false);
+
+  useEffect(() => {
+    const disabled = name === '';
+    setDisabled(disabled);
+  }, [name]);
+
+  const initializeLocalPeer = useCallback(
+    (e: any) => {
+      setLocalPeerName(name);
+      e.preventDefault();
+    },
+    [name, setLocalPeerName]
+  );
+
+  if (localPeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -64,13 +91,27 @@ const InputFromLocal: VFC<Props> = (props) => {
             label={label}
             margin="normal"
             name="name"
+            onChange={(e) => setName(e.target.value)}
+            onCompositionEnd={() => setIsComposed(false)}
+            onCompositionStart={() => setIsComposed(true)}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              if (isComposed) return;
+
+              const target: any = e.target;
+              if (target.value === '') return;
+
+              if (e.key === 'Enter') initializeLocalPeer(e);
+            }}
             required
+            value={name}
             variant="outlined"
           />
           <Button
             className={classes.submit}
             color="primary"
+            disabled={disabled}
             fullWidth
+            onClick={(e) => initializeLocalPeer(e)}
             type="submit"
             variant="contained"
           >

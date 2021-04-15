@@ -47,6 +47,8 @@ type Props = {
 };
 
 const InputFromLocal: VFC<Props> = (props) => {
+  const { remotePeerName, setRemotePeerName } = props;
+
   const label = 'target name';
   const classes = useStyles();
 
