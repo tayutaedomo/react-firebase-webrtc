@@ -1,11 +1,12 @@
 import React, { useEffect, useRef, VFC } from 'react';
+import Video from './Video';
 
 type Props = {
-  localPeerName: string;
+  name: string;
 };
 
 const VideoLocal: VFC<Props> = (props) => {
-  const { localPeerName } = props;
+  const { name } = props;
   const videoRef = useRef<HTMLVideoElement>(null);
   const currentVideoRef = videoRef.current;
 
@@ -28,7 +29,11 @@ const VideoLocal: VFC<Props> = (props) => {
     getMedia();
   }, [currentVideoRef]);
 
-  return <div></div>;
+  return (
+    <div>
+      <Video isLocal={true} videoRef={videoRef} name={name} />
+    </div>
+  );
 };
 
 export default VideoLocal;
