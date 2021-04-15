@@ -1,4 +1,12 @@
-import React, { Dispatch, SetStateAction, VFC } from 'react';
+import React, {
+  Dispatch,
+  KeyboardEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+  VFC,
+} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -42,15 +50,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
+  localPeerName: string;
   remotePeerName: string;
   setRemotePeerName: Dispatch<SetStateAction<string>>;
 };
 
 const InputFromLocal: VFC<Props> = (props) => {
-  const { remotePeerName, setRemotePeerName } = props;
-
-  const label = 'target name';
+  const { localPeerName, remotePeerName, setRemotePeerName } = props;
+  const label = 'remote peer name';
   const classes = useStyles();
+  const [disabled, setDisabled] = useState(true);
+  const [name, setName] = useState('');
+  const [isComposed, setIsComposed] = useState(false);
+
+  useEffect(() => {
+    const disabled = name === '';
+    setDisabled(disabled);
+  }, [name]);
+
+  const initializeRemotePeer = useCallback(
+    (e: any) => {
+      setRemotePeerName(name);
+      e.preventDefault();
+    },
+    [name, setRemotePeerName]
+  );
+
+  if (localPeerName === '') return <></>;
+  if (remotePeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -66,13 +93,27 @@ const InputFromLocal: VFC<Props> = (props) => {
             label={label}
             margin="normal"
             name="name"
+            onChange={(e) => setName(e.target.value)}
+            onCompositionEnd={() => setIsComposed(false)}
+            onCompositionStart={() => setIsComposed(true)}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              if (isComposed) return;
+
+              const target: any = e.target;
+              if (target.value === '') return;
+
+              if (e.key === 'Enter') initializeRemotePeer(e);
+            }}
             required
+            value={name}
             variant="outlined"
           />
           <Button
             className={classes.submit}
             color="primary"
+            disabled={disabled}
             fullWidth
+            onClick={(e) => initializeRemotePeer(e)}
             type="submit"
             variant="contained"
           >

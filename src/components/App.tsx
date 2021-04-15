@@ -26,6 +26,7 @@ const App = () => {
         setLocalPeerName={setLocalPeerName}
       />
       <InputFromRemote
+        localPeerName={localPeerName}
         remotePeerName={remotePeerName}
         setRemotePeerName={setRemotePeerName}
       />
