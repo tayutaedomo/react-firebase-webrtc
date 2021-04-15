@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button } from '@material-ui/core';
+
+import InputFromLocal from './InputFromLocal';
+import InputFromRemote from './InputFromRemote';
 
 const getMedia = async () => {
   const constraints = { audio: true, video: true };
@@ -16,9 +18,8 @@ getMedia();
 const App = () => {
   return (
     <>
-      <Button color="primary" variant="outlined">
-        Hello, World!
-      </Button>
+      <InputFromLocal />
+      <InputFromRemote />
     </>
   );
 };
