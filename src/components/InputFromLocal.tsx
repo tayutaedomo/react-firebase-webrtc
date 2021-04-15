@@ -1,4 +1,4 @@
-import React, { VFC } from 'react';
+import React, { Dispatch, SetStateAction, VFC } from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -41,7 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const InputFromLocal: VFC = () => {
+type Props = {
+  localPeerName: string;
+  setLocalPeerName: Dispatch<SetStateAction<string>>;
+};
+
+const InputFromLocal: VFC<Props> = (props) => {
   const label = 'your name';
   const classes = useStyles();
 
