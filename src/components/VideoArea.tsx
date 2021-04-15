@@ -4,6 +4,7 @@ import Grid from '@material-ui/core/Grid';
 
 import VideoLocal from './VideoLocal';
 import VideoRemote from './VideoRemote';
+import RtcClient from '../utils/RtcClient';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -19,22 +20,21 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 type Props = {
-  localPeerName: string;
-  remotePeerName: string;
+  rtcClient: RtcClient;
 };
 
 const VideoArea: VFC<Props> = (props) => {
-  const { localPeerName, remotePeerName } = props;
+  const { rtcClient } = props;
   const classes = useStyles();
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <VideoLocal name={localPeerName} />
+          <VideoLocal name={rtcClient.localPeerName} />
         </Grid>
         <Grid item xs={6}>
-          <VideoRemote name={remotePeerName} />
+          <VideoRemote name={rtcClient.remotePeerName} />
         </Grid>
       </Grid>
     </div>

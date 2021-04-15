@@ -1,7 +1,5 @@
 import React, {
-  Dispatch,
   KeyboardEvent,
-  SetStateAction,
   useCallback,
   useEffect,
   useState,
@@ -15,6 +13,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import RtcClient from '../utils/RtcClient';
 
 const Copyright = () => {
   return (
@@ -50,13 +50,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  localPeerName: string;
-  remotePeerName: string;
-  setRemotePeerName: Dispatch<SetStateAction<string>>;
+  rtcClient: RtcClient;
+  setRtcClient: (rtcClient: RtcClient) => void;
 };
 
 const InputFromLocal: VFC<Props> = (props) => {
-  const { localPeerName, remotePeerName, setRemotePeerName } = props;
+  const { rtcClient, setRtcClient } = props;
   const label = 'remote peer name';
   const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
@@ -70,14 +69,15 @@ const InputFromLocal: VFC<Props> = (props) => {
 
   const initializeRemotePeer = useCallback(
     (e: any) => {
-      setRemotePeerName(name);
+      rtcClient.remotePeerName = name;
+      setRtcClient(rtcClient);
       e.preventDefault();
     },
-    [name, setRemotePeerName]
+    [name, rtcClient, setRtcClient]
   );
 
-  if (localPeerName === '') return <></>;
-  if (remotePeerName !== '') return <></>;
+  if (rtcClient.localPeerName === '') return <></>;
+  if (rtcClient.remotePeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">

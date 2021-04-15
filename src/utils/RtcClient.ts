@@ -1,7 +1,8 @@
 export default class RtcClient {
   private rtcPeerConnection: RTCPeerConnection;
-  private localPeerName: string;
-  private remotePeerName: string;
+
+  public localPeerName: string;
+  public remotePeerName: string;
 
   constructor() {
     const config = {
