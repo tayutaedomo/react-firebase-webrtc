@@ -72,11 +72,49 @@ export default class RtcClient {
     return this.mediaStream?.getVideoTracks()[0];
   }
 
-  connect(remotePeerName: string) {
+  async connect(remotePeerName: string) {
     this.remotePeerName = remotePeerName;
     this.setOnicecandidateCallback();
     this.setOntrack();
+    await this.offer();
     this.setRtcClient();
+  }
+
+  get localDescription() {
+    return this.rtcPeerConnection.localDescription?.toJSON();
+  }
+
+  async offer() {
+    const description = await this.createOffer();
+    if (description) {
+      await this.setLocalDescription(description);
+      await this.sendOffer();
+    }
+  }
+
+  async createOffer() {
+    try {
+      return await this.rtcPeerConnection.createOffer();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async setLocalDescription(description: RTCSessionDescriptionInit) {
+    try {
+      await this.rtcPeerConnection.setLocalDescription(description);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  async sendOffer() {
+    this.firebaseSignalingClient.setPeerNames(
+      this.localPeerName,
+      this.remotePeerName
+    );
+
+    await this.firebaseSignalingClient.sendOffer(this.localDescription);
   }
 
   setOntrack() {
@@ -106,8 +144,10 @@ export default class RtcClient {
     this.localPeerName = localPeerName;
     this.setRtcClient();
 
+    const refName = `webrtc/${localPeerName}`;
+
     this.firebaseSignalingClient.database
-      .ref(`webrtc/${localPeerName}`)
+      .ref(refName)
       .on('value', (snapshot) => {
         console.log(snapshot.val());
       });

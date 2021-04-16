@@ -30,4 +30,22 @@ export default class FirebaseSignalingClient {
     this.localPeerName = '';
     this.remotePeerName = '';
   }
+
+  setPeerNames(localPeerName: string, remotePeerName: string) {
+    this.localPeerName = localPeerName;
+    this.remotePeerName = remotePeerName;
+  }
+
+  get targetRef() {
+    const refName = `webrtc/${this.remotePeerName}`;
+    return this.database.ref(refName);
+  }
+
+  async sendOffer(sessionDescription: string) {
+    await this.targetRef.set({
+      type: 'offer',
+      sender: this.localPeerName,
+      sessionDescription,
+    });
+  }
 }
