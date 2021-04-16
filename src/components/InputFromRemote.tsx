@@ -51,11 +51,10 @@ const useStyles = makeStyles((theme) => ({
 
 type Props = {
   rtcClient: RtcClient;
-  setRtcClient: (rtcClient: RtcClient) => void;
 };
 
 const InputFromLocal: VFC<Props> = (props) => {
-  const { rtcClient, setRtcClient } = props;
+  const { rtcClient } = props;
   const label = 'remote peer name';
   const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
@@ -70,10 +69,10 @@ const InputFromLocal: VFC<Props> = (props) => {
   const initializeRemotePeer = useCallback(
     (e: any) => {
       rtcClient.remotePeerName = name;
-      setRtcClient(rtcClient);
+      rtcClient.setRtcClient();
       e.preventDefault();
     },
-    [name, rtcClient, setRtcClient]
+    [name, rtcClient]
   );
 
   if (rtcClient.localPeerName === '') return <></>;
