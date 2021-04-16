@@ -53,7 +53,7 @@ type Props = {
   rtcClient: RtcClient;
 };
 
-const InputFromLocal: VFC<Props> = (props) => {
+const InputFormLocal: VFC<Props> = (props) => {
   const { rtcClient } = props;
   const label = 'remote peer name';
   const classes = useStyles();
@@ -126,4 +126,4 @@ const InputFromLocal: VFC<Props> = (props) => {
   );
 };
 
-export default InputFromLocal;
+export default InputFormLocal;
