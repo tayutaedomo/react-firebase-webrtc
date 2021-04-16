@@ -11,9 +11,9 @@ const {
 } = process.env;
 
 export default class FirebaseSignalingClient {
-  database: firebase.database.Database;
-  localPeerName: string;
-  remotePeerName: string;
+  public database: firebase.database.Database;
+  public localPeerName: string;
+  public remotePeerName: string;
 
   constructor() {
     const firebaseConfig = {
