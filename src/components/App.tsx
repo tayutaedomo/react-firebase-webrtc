@@ -1,23 +1,12 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import RtcClient from '../utils/RtcClient';
+import React from 'react';
 
+import useRtcClient from './hooks/useRtcClient';
 import InputFromLocal from './InputFromLocal';
 import InputFromRemote from './InputFromRemote';
 import VideoArea from './VideoArea';
 
 const App = () => {
-  const [rtcClient, _setRtcClient] = useState<RtcClient | null>(null);
-  const [, forceRender] = useReducer((boolean) => !boolean, false);
-
-  const setRtcClient = (rtcClient: RtcClient) => {
-    _setRtcClient(rtcClient);
-    forceRender();
-  };
-
-  useEffect(() => {
-    const client = new RtcClient(setRtcClient);
-    client.setRtcClient();
-  }, []);
+  const rtcClient = useRtcClient();
 
   if (rtcClient === null) return <></>;
 
