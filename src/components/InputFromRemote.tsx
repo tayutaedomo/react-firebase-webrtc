@@ -68,8 +68,7 @@ const InputFromLocal: VFC<Props> = (props) => {
 
   const initializeRemotePeer = useCallback(
     (e: any) => {
-      rtcClient.remotePeerName = name;
-      rtcClient.setRtcClient();
+      rtcClient.connect(name);
       e.preventDefault();
     },
     [name, rtcClient]
