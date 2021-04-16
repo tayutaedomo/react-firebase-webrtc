@@ -68,8 +68,7 @@ const InputFromLocal: VFC<Props> = (props) => {
 
   const initializeLocalPeer = useCallback(
     (e: any) => {
-      rtcClient.localPeerName = name;
-      rtcClient.setRtcClient();
+      rtcClient.startListening(name);
       e.preventDefault();
     },
     [name, rtcClient]

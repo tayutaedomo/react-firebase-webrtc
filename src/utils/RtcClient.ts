@@ -29,4 +29,9 @@ export default class RtcClient {
       console.error(err);
     }
   }
+
+  startListening(localPeerName: string) {
+    this.localPeerName = localPeerName;
+    this.setRtcClient();
+  }
 }
