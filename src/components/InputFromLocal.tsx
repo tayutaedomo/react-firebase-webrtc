@@ -1,7 +1,5 @@
 import React, {
-  Dispatch,
   KeyboardEvent,
-  SetStateAction,
   useCallback,
   useEffect,
   useState,
@@ -15,6 +13,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import RtcClient from '../utils/RtcClient';
 
 const Copyright = () => {
   return (
@@ -50,12 +50,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  localPeerName: string;
-  setLocalPeerName: Dispatch<SetStateAction<string>>;
+  rtcClient: RtcClient;
 };
 
 const InputFromLocal: VFC<Props> = (props) => {
-  const { localPeerName, setLocalPeerName } = props;
+  const { rtcClient } = props;
   const label = 'your name';
   const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
@@ -69,13 +68,14 @@ const InputFromLocal: VFC<Props> = (props) => {
 
   const initializeLocalPeer = useCallback(
     (e: any) => {
-      setLocalPeerName(name);
+      rtcClient.localPeerName = name;
+      rtcClient.setRtcClient();
       e.preventDefault();
     },
-    [name, setLocalPeerName]
+    [name, rtcClient]
   );
 
-  if (localPeerName !== '') return <></>;
+  if (rtcClient.localPeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">

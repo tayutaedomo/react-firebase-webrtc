@@ -1,4 +1,10 @@
-import React, { Dispatch, SetStateAction, VFC } from 'react';
+import React, {
+  KeyboardEvent,
+  useCallback,
+  useEffect,
+  useState,
+  VFC,
+} from 'react';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
@@ -7,6 +13,8 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+
+import RtcClient from '../utils/RtcClient';
 
 const Copyright = () => {
   return (
@@ -42,15 +50,33 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 type Props = {
-  remotePeerName: string;
-  setRemotePeerName: Dispatch<SetStateAction<string>>;
+  rtcClient: RtcClient;
 };
 
 const InputFromLocal: VFC<Props> = (props) => {
-  const { remotePeerName, setRemotePeerName } = props;
-
-  const label = 'target name';
+  const { rtcClient } = props;
+  const label = 'remote peer name';
   const classes = useStyles();
+  const [disabled, setDisabled] = useState(true);
+  const [name, setName] = useState('');
+  const [isComposed, setIsComposed] = useState(false);
+
+  useEffect(() => {
+    const disabled = name === '';
+    setDisabled(disabled);
+  }, [name]);
+
+  const initializeRemotePeer = useCallback(
+    (e: any) => {
+      rtcClient.remotePeerName = name;
+      rtcClient.setRtcClient();
+      e.preventDefault();
+    },
+    [name, rtcClient]
+  );
+
+  if (rtcClient.localPeerName === '') return <></>;
+  if (rtcClient.remotePeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -66,13 +92,27 @@ const InputFromLocal: VFC<Props> = (props) => {
             label={label}
             margin="normal"
             name="name"
+            onChange={(e) => setName(e.target.value)}
+            onCompositionEnd={() => setIsComposed(false)}
+            onCompositionStart={() => setIsComposed(true)}
+            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+              if (isComposed) return;
+
+              const target: any = e.target;
+              if (target.value === '') return;
+
+              if (e.key === 'Enter') initializeRemotePeer(e);
+            }}
             required
+            value={name}
             variant="outlined"
           />
           <Button
             className={classes.submit}
             color="primary"
+            disabled={disabled}
             fullWidth
+            onClick={(e) => initializeRemotePeer(e)}
             type="submit"
             variant="contained"
           >
