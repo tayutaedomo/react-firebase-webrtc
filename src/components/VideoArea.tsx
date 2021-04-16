@@ -28,15 +28,16 @@ const VideoArea: VFC<Props> = (props) => {
   const classes = useStyles();
 
   if (rtcClient === null) return <></>;
+  if (rtcClient.localPeerName === '') return <></>;
 
   return (
     <div className={classes.root}>
       <Grid container spacing={3}>
         <Grid item xs={6}>
-          <VideoLocal name={rtcClient.localPeerName} />
+          <VideoLocal rtcClient={rtcClient} />
         </Grid>
         <Grid item xs={6}>
-          <VideoRemote name={rtcClient.remotePeerName} />
+          <VideoRemote rtcClient={rtcClient} />
         </Grid>
       </Grid>
     </div>
