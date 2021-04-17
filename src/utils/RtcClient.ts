@@ -107,6 +107,14 @@ export default class RtcClient {
     await this.firebaseSignalingClient.sendAnswer(this.localDescription);
   }
 
+  async saveReceivedSessionDescription(sessionDescription: object) {
+    try {
+      await this.setRemoteDescription(sessionDescription);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   get localDescription() {
     return this.rtcPeerConnection.localDescription?.toJSON();
   }
@@ -183,6 +191,10 @@ export default class RtcClient {
         switch (type) {
           case 'offer':
             await this.answer(sender, sessionDescription);
+            break;
+
+          case 'answer':
+            await this.saveReceivedSessionDescription(sessionDescription);
             break;
 
           default:
