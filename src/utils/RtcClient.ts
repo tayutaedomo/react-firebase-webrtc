@@ -166,11 +166,19 @@ export default class RtcClient {
     this.setRtcClient();
   }
 
+  async addIceCandidate(candidate: RTCIceCandidate) {
+    try {
+      const iceCandidate = new RTCIceCandidate(candidate);
+      await this.rtcPeerConnection.addIceCandidate(iceCandidate);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   setOnicecandidateCallback() {
-    this.rtcPeerConnection.onicecandidate = (event) => {
-      if (event.candidate) {
-        console.log({ event });
-        // TODO: Send the candidate to the remote peer
+    this.rtcPeerConnection.onicecandidate = async ({ candidate }) => {
+      if (candidate) {
+        await this.firebaseSignalingClient.sendCandidate(candidate.toJSON());
       }
     };
   }
@@ -187,7 +195,9 @@ export default class RtcClient {
         const data = snapshot.val();
         if (data === null) return;
 
-        const { sender, sessionDescription, type } = data;
+        // console.log({ data });
+        const { candidate, sender, sessionDescription, type } = data;
+
         switch (type) {
           case 'offer':
             await this.answer(sender, sessionDescription);
@@ -197,7 +207,12 @@ export default class RtcClient {
             await this.saveReceivedSessionDescription(sessionDescription);
             break;
 
+          case 'candidate':
+            await this.addIceCandidate(candidate);
+            break;
+
           default:
+            this.setRtcClient();
             break;
         }
       });
