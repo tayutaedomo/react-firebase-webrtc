@@ -1,8 +1,8 @@
 import React, { VFC } from 'react';
 import RtcClient from '../utils/RtcClient';
 
-import InputFromLocal from './InputFromLocal';
-import InputFromRemote from './InputFromRemote';
+import InputFormLocal from './InputFormLocal';
+import InputFormRemote from './InputFormRemote';
 
 type Props = {
   rtcClient: RtcClient | null;
@@ -15,8 +15,8 @@ const InputForm: VFC<Props> = (props) => {
 
   return (
     <>
-      <InputFromLocal rtcClient={rtcClient} />
-      <InputFromRemote rtcClient={rtcClient} />
+      <InputFormLocal rtcClient={rtcClient} />
+      <InputFormRemote rtcClient={rtcClient} />
     </>
   );
 };

@@ -9,7 +9,7 @@ type Props = {
 
 const VideoRemote: VFC<Props> = (props) => {
   const { rtcClient } = props;
-  const videoRef = null;
+  const videoRef = rtcClient.remoteVideoRef;
 
   return (
     <Video

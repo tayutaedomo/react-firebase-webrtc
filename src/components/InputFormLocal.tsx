@@ -8,26 +8,13 @@ import React, {
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
+import Copyright from './organisms/Copyright';
 import RtcClient from '../utils/RtcClient';
-
-const Copyright = () => {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="">
-        XXX
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-};
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,10 +22,6 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -53,9 +36,9 @@ type Props = {
   rtcClient: RtcClient;
 };
 
-const InputFromLocal: VFC<Props> = (props) => {
+const InputFormLocal: VFC<Props> = (props) => {
   const { rtcClient } = props;
-  const label = 'remote peer name';
+  const label = 'your name';
   const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
   const [name, setName] = useState('');
@@ -66,17 +49,15 @@ const InputFromLocal: VFC<Props> = (props) => {
     setDisabled(disabled);
   }, [name]);
 
-  const initializeRemotePeer = useCallback(
-    (e: any) => {
-      rtcClient.remotePeerName = name;
-      rtcClient.setRtcClient();
+  const initializeLocalPeer = useCallback(
+    async (e: any) => {
+      await rtcClient.startListening(name);
       e.preventDefault();
     },
     [name, rtcClient]
   );
 
-  if (rtcClient.localPeerName === '') return <></>;
-  if (rtcClient.remotePeerName !== '') return <></>;
+  if (rtcClient.localPeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -95,13 +76,13 @@ const InputFromLocal: VFC<Props> = (props) => {
             onChange={(e) => setName(e.target.value)}
             onCompositionEnd={() => setIsComposed(false)}
             onCompositionStart={() => setIsComposed(true)}
-            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+            onKeyDown={async (e: KeyboardEvent<HTMLInputElement>) => {
               if (isComposed) return;
 
               const target: any = e.target;
               if (target.value === '') return;
 
-              if (e.key === 'Enter') initializeRemotePeer(e);
+              if (e.key === 'Enter') await initializeLocalPeer(e);
             }}
             required
             value={name}
@@ -112,7 +93,7 @@ const InputFromLocal: VFC<Props> = (props) => {
             color="primary"
             disabled={disabled}
             fullWidth
-            onClick={(e) => initializeRemotePeer(e)}
+            onClick={async (e) => await initializeLocalPeer(e)}
             type="submit"
             variant="contained"
           >
@@ -127,4 +108,4 @@ const InputFromLocal: VFC<Props> = (props) => {
   );
 };
 
-export default InputFromLocal;
+export default InputFormLocal;

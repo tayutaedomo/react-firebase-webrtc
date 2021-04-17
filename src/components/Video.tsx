@@ -1,8 +1,8 @@
-import React, { LegacyRef, VFC } from 'react';
+import React, { RefObject, VFC } from 'react';
 
 type Props = {
   isLocal: boolean;
-  videoRef: LegacyRef<HTMLVideoElement>;
+  videoRef: RefObject<HTMLVideoElement>;
   name: string;
 };
 
