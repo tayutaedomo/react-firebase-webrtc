@@ -32,7 +32,7 @@ const VideoArea: VFC<Props> = (props) => {
 
   return (
     <div className={classes.root}>
-      <Grid container spacing={3}>
+      <Grid container spacing={0}>
         <Grid item xs={6}>
           <VideoLocal rtcClient={rtcClient} />
         </Grid>
