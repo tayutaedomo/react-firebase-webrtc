@@ -72,12 +72,39 @@ export default class RtcClient {
     return this.mediaStream?.getVideoTracks()[0];
   }
 
+  async answer(sender: string, sessionDescription: object) {
+    try {
+      this.remotePeerName = sender;
+      this.setOnicecandidateCallback();
+      this.setOntrack();
+      await this.setRemoteDescription(sessionDescription);
+      const answer = await this.rtcPeerConnection.createAnswer();
+      await this.rtcPeerConnection.setLocalDescription(answer);
+      await this.sendAnswer();
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
   async connect(remotePeerName: string) {
     this.remotePeerName = remotePeerName;
     this.setOnicecandidateCallback();
     this.setOntrack();
     await this.offer();
     this.setRtcClient();
+  }
+
+  async setRemoteDescription(sessionDescription: object) {
+    await this.rtcPeerConnection.setRemoteDescription(sessionDescription);
+  }
+
+  async sendAnswer() {
+    this.firebaseSignalingClient.setPeerNames(
+      this.localPeerName,
+      this.remotePeerName
+    );
+
+    await this.firebaseSignalingClient.sendAnswer(this.localDescription);
   }
 
   get localDescription() {
@@ -148,8 +175,19 @@ export default class RtcClient {
 
     this.firebaseSignalingClient.database
       .ref(refName)
-      .on('value', (snapshot) => {
-        console.log(snapshot.val());
+      .on('value', async (snapshot) => {
+        const data = snapshot.val();
+        if (data === null) return;
+
+        const { sender, sessionDescription, type } = data;
+        switch (type) {
+          case 'offer':
+            await this.answer(sender, sessionDescription);
+            break;
+
+          default:
+            break;
+        }
       });
   }
 }
