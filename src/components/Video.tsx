@@ -6,6 +6,7 @@ import {
   CardContent,
   Typography,
 } from '@material-ui/core';
+import useDimensions from './hooks/useDimensions';
 
 type Props = {
   isLocal: boolean;
@@ -16,19 +17,7 @@ type Props = {
 const Video: VFC<Props> = (props) => {
   const { isLocal, name, videoRef } = props;
   const refCard = useRef<HTMLElement | null>(null);
-  const node = refCard.current;
-  const updateDimensions = (node: HTMLElement | null) => {
-    return node === null
-      ? {
-          width: 0,
-          height: 0,
-        }
-      : {
-          width: node.offsetWidth,
-          height: node.offsetHeight,
-        };
-  };
-  const dimensionsCard = updateDimensions(node);
+  const dimensionsCard = useDimensions(refCard);
 
   return (
     <Card ref={refCard}>
