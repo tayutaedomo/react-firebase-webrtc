@@ -167,12 +167,12 @@ export default class RtcClient {
     };
   }
 
-  startListening(localPeerName: string) {
+  async startListening(localPeerName: string) {
     this.localPeerName = localPeerName;
     this.setRtcClient();
 
     const refName = `webrtc/${localPeerName}`;
-
+    await this.firebaseSignalingClient.remove(refName);
     this.firebaseSignalingClient.database
       .ref(refName)
       .on('value', async (snapshot) => {

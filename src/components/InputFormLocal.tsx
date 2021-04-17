@@ -50,8 +50,8 @@ const InputFormLocal: VFC<Props> = (props) => {
   }, [name]);
 
   const initializeLocalPeer = useCallback(
-    (e: any) => {
-      rtcClient.startListening(name);
+    async (e: any) => {
+      await rtcClient.startListening(name);
       e.preventDefault();
     },
     [name, rtcClient]
@@ -76,13 +76,13 @@ const InputFormLocal: VFC<Props> = (props) => {
             onChange={(e) => setName(e.target.value)}
             onCompositionEnd={() => setIsComposed(false)}
             onCompositionStart={() => setIsComposed(true)}
-            onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+            onKeyDown={async (e: KeyboardEvent<HTMLInputElement>) => {
               if (isComposed) return;
 
               const target: any = e.target;
               if (target.value === '') return;
 
-              if (e.key === 'Enter') initializeLocalPeer(e);
+              if (e.key === 'Enter') await initializeLocalPeer(e);
             }}
             required
             value={name}
@@ -93,7 +93,7 @@ const InputFormLocal: VFC<Props> = (props) => {
             color="primary"
             disabled={disabled}
             fullWidth
-            onClick={(e) => initializeLocalPeer(e)}
+            onClick={async (e) => await initializeLocalPeer(e)}
             type="submit"
             variant="contained"
           >
