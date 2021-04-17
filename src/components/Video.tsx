@@ -1,5 +1,4 @@
-import React, { RefObject, VFC } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import React, { RefObject, useRef, VFC } from 'react';
 import {
   Card,
   CardActionArea,
@@ -7,12 +6,6 @@ import {
   CardContent,
   Typography,
 } from '@material-ui/core';
-
-const useStyles = makeStyles({
-  root: {
-    maxWidth: 345,
-  },
-});
 
 type Props = {
   isLocal: boolean;
@@ -22,12 +15,30 @@ type Props = {
 
 const Video: VFC<Props> = (props) => {
   const { isLocal, name, videoRef } = props;
-  const classes = useStyles();
+  const refCard = useRef<HTMLElement | null>(null);
+  const node = refCard.current;
+  const updateDimensions = (node: HTMLElement | null) => {
+    return node === null
+      ? {
+          width: 0,
+          height: 0,
+        }
+      : {
+          width: node.offsetWidth,
+          height: node.offsetHeight,
+        };
+  };
+  const dimensionsCard = updateDimensions(node);
 
   return (
-    <Card className={classes.root}>
+    <Card ref={refCard}>
       <CardActionArea>
-        <video autoPlay={true} muted={isLocal} ref={videoRef} />
+        <video
+          autoPlay={true}
+          muted={isLocal}
+          ref={videoRef}
+          width={dimensionsCard.width}
+        />
         <CardContent>
           <Typography gutterBottom variant="h5" component="h2">
             {name}
