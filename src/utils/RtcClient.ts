@@ -2,6 +2,8 @@ import { RefObject } from 'react';
 
 import FirebaseSignalingClient from './FirebaseSignalingClient';
 
+const INITIAL_AUDIO_ENABLED = false;
+
 export default class RtcClient {
   private rtcPeerConnection: RTCPeerConnection;
   private firebaseSignalingClient: FirebaseSignalingClient;
@@ -26,6 +28,10 @@ export default class RtcClient {
     this.remoteVideoRef = remoteVideoRef;
     this._setRtcClient = setRtcClient;
     this.mediaStream = null;
+  }
+
+  get initialAudioMuted() {
+    return !INITIAL_AUDIO_ENABLED;
   }
 
   setRtcClient() {
@@ -54,8 +60,10 @@ export default class RtcClient {
 
   addAudioTrack() {
     const audioTrack = this.audioTrack;
-    if (audioTrack && this.mediaStream)
+    if (audioTrack && this.mediaStream) {
+      audioTrack.enabled = INITIAL_AUDIO_ENABLED;
       this.rtcPeerConnection.addTrack(audioTrack, this.mediaStream);
+    }
   }
 
   addVideoTrack() {
@@ -117,6 +125,10 @@ export default class RtcClient {
 
   get localDescription() {
     return this.rtcPeerConnection.localDescription?.toJSON();
+  }
+
+  toggleAudio() {
+    if (this.audioTrack) this.audioTrack.enabled = !this.audioTrack.enabled;
   }
 
   async offer() {

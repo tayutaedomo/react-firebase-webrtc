@@ -24,6 +24,7 @@ const VideoLocal: VFC<Props> = (props) => {
         isLocal={true}
         videoRef={videoRef}
         name={rtcClient.localPeerName}
+        rtcClient={rtcClient}
       />
     </div>
   );

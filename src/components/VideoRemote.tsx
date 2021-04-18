@@ -16,6 +16,7 @@ const VideoRemote: VFC<Props> = (props) => {
       isLocal={false}
       videoRef={videoRef}
       name={rtcClient.remotePeerName}
+      rtcClient={rtcClient}
     />
   );
 };

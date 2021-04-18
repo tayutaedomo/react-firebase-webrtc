@@ -9,16 +9,18 @@ import {
 
 import useDimensions from './hooks/useDimensions';
 import VolumeButton from './molecules/VolumeButton';
+import RtcClient from '../utils/RtcClient';
 
 type Props = {
   isLocal: boolean;
   videoRef: RefObject<HTMLVideoElement>;
   name: string;
+  rtcClient: RtcClient;
 };
 
 const Video: VFC<Props> = (props) => {
-  const [muted, setMuted] = useState(true);
-  const { isLocal, name, videoRef } = props;
+  const { isLocal, name, videoRef, rtcClient } = props;
+  const [muted, setMuted] = useState(rtcClient.initialAudioMuted);
   const refCard = useRef<HTMLElement | null>(null);
   const dimensionsCard = useDimensions(refCard);
 
@@ -38,7 +40,12 @@ const Video: VFC<Props> = (props) => {
         </CardContent>
       </CardActionArea>
       <CardActions>
-        <VolumeButton muted={muted} setMuted={setMuted} />
+        <VolumeButton
+          muted={muted}
+          setMuted={setMuted}
+          rtcClient={rtcClient}
+          isLocal={isLocal}
+        />
       </CardActions>
     </Card>
   );
