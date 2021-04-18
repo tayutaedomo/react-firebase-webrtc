@@ -1,4 +1,4 @@
-import React, { RefObject, useRef, VFC } from 'react';
+import React, { RefObject, useRef, useState, VFC } from 'react';
 import {
   Card,
   CardActionArea,
@@ -6,7 +6,9 @@ import {
   CardContent,
   Typography,
 } from '@material-ui/core';
+
 import useDimensions from './hooks/useDimensions';
+import VolumeButton from './molecules/VolumeButton';
 
 type Props = {
   isLocal: boolean;
@@ -15,6 +17,7 @@ type Props = {
 };
 
 const Video: VFC<Props> = (props) => {
+  const [muted, setMuted] = useState(true);
   const { isLocal, name, videoRef } = props;
   const refCard = useRef<HTMLElement | null>(null);
   const dimensionsCard = useDimensions(refCard);
@@ -24,7 +27,7 @@ const Video: VFC<Props> = (props) => {
       <CardActionArea>
         <video
           autoPlay={true}
-          muted={isLocal}
+          muted={isLocal || muted}
           ref={videoRef}
           width={dimensionsCard.width}
         />
@@ -34,7 +37,9 @@ const Video: VFC<Props> = (props) => {
           </Typography>
         </CardContent>
       </CardActionArea>
-      <CardActions></CardActions>
+      <CardActions>
+        <VolumeButton muted={muted} setMuted={setMuted} />
+      </CardActions>
     </Card>
   );
 };
