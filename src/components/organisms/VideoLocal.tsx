@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, VFC } from 'react';
-import RtcClient from '../utils/RtcClient';
+import RtcClient from '../../utils/RtcClient';
 
 import Video from './Video';
 
@@ -18,12 +18,16 @@ const VideoLocal: VFC<Props> = (props) => {
     currentVideoRef.srcObject = mediaStream;
   }, [currentVideoRef, mediaStream]);
 
+  if (rtcClient.localPeerName === '' || rtcClient.remotePeerName === '')
+    return <></>;
+
   return (
     <div>
       <Video
         isLocal={true}
         videoRef={videoRef}
         name={rtcClient.localPeerName}
+        rtcClient={rtcClient}
       />
     </div>
   );
