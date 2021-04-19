@@ -18,6 +18,9 @@ const VideoLocal: VFC<Props> = (props) => {
     currentVideoRef.srcObject = mediaStream;
   }, [currentVideoRef, mediaStream]);
 
+  if (rtcClient.localPeerName === '' || rtcClient.remotePeerName === '')
+    return <></>;
+
   return (
     <div>
       <Video
