@@ -1,5 +1,5 @@
 import React, { VFC } from 'react';
-import RtcClient from '../utils/RtcClient';
+import RtcClient from '../../utils/RtcClient';
 
 import Video from './Video';
 

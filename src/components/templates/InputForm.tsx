@@ -1,8 +1,8 @@
 import React, { VFC } from 'react';
-import RtcClient from '../utils/RtcClient';
+import RtcClient from '../../utils/RtcClient';
 
-import InputFormLocal from './InputFormLocal';
-import InputFormRemote from './InputFormRemote';
+import InputFormLocal from '../organisms/InputFormLocal';
+import InputFormRemote from '../organisms/InputFormRemote';
 
 type Props = {
   rtcClient: RtcClient | null;

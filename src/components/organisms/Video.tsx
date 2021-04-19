@@ -7,10 +7,10 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import useDimensions from './hooks/useDimensions';
-import VolumeButton from './molecules/VolumeButton';
-import RtcClient from '../utils/RtcClient';
-import AudioAnalyser from './web_audio/AudioAnalyser';
+import useDimensions from '../hooks/useDimensions';
+import VolumeButton from '../molecules/VolumeButton';
+import RtcClient from '../../utils/RtcClient';
+import AudioAnalyser from '../web_audio/AudioAnalyser';
 
 type Props = {
   isLocal: boolean;

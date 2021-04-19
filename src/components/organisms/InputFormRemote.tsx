@@ -13,8 +13,8 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import Copyright from './organisms/Copyright';
-import RtcClient from '../utils/RtcClient';
+import Copyright from '../molecules/Copyright';
+import RtcClient from '../../utils/RtcClient';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -38,7 +38,7 @@ type Props = {
 
 const InputFormLocal: VFC<Props> = (props) => {
   const { rtcClient } = props;
-  const label = 'your name';
+  const label = 'remote peer name';
   const classes = useStyles();
   const [disabled, setDisabled] = useState(true);
   const [name, setName] = useState('');
@@ -49,15 +49,16 @@ const InputFormLocal: VFC<Props> = (props) => {
     setDisabled(disabled);
   }, [name]);
 
-  const initializeLocalPeer = useCallback(
+  const initializeRemotePeer = useCallback(
     async (e: any) => {
-      await rtcClient.startListening(name);
+      await rtcClient.connect(name);
       e.preventDefault();
     },
     [name, rtcClient]
   );
 
-  if (rtcClient.localPeerName !== '') return <></>;
+  if (rtcClient.localPeerName === '') return <></>;
+  if (rtcClient.remotePeerName !== '') return <></>;
 
   return (
     <Container component="main" maxWidth="xs">
@@ -82,7 +83,7 @@ const InputFormLocal: VFC<Props> = (props) => {
               const target: any = e.target;
               if (target.value === '') return;
 
-              if (e.key === 'Enter') await initializeLocalPeer(e);
+              if (e.key === 'Enter') await initializeRemotePeer(e);
             }}
             required
             value={name}
@@ -93,7 +94,7 @@ const InputFormLocal: VFC<Props> = (props) => {
             color="primary"
             disabled={disabled}
             fullWidth
-            onClick={async (e) => await initializeLocalPeer(e)}
+            onClick={async (e) => await initializeRemotePeer(e)}
             type="submit"
             variant="contained"
           >

@@ -2,9 +2,9 @@ import React, { VFC } from 'react';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 
-import VideoLocal from './VideoLocal';
-import VideoRemote from './VideoRemote';
-import RtcClient from '../utils/RtcClient';
+import VideoLocal from '../organisms/VideoLocal';
+import VideoRemote from '../organisms/VideoRemote';
+import RtcClient from '../../utils/RtcClient';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
