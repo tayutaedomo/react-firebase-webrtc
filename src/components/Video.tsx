@@ -24,6 +24,8 @@ const Video: VFC<Props> = (props) => {
   const [muted, setMuted] = useState(rtcClient.initialAudioMuted);
   const refCard = useRef<HTMLElement | null>(null);
   const dimensionsCard = useDimensions(refCard);
+  const refVolumeButton = useRef(null);
+  const dimensionsVolumeButton = useDimensions(refVolumeButton);
 
   return (
     <Card ref={refCard}>
@@ -44,11 +46,15 @@ const Video: VFC<Props> = (props) => {
         <VolumeButton
           muted={muted}
           setMuted={setMuted}
+          refVolumeButton={refVolumeButton}
           rtcClient={rtcClient}
           isLocal={isLocal}
         />
         {!muted && videoRef.current && videoRef.current.srcObject && (
-          <AudioAnalyser audio={videoRef.current.srcObject} />
+          <AudioAnalyser
+            audio={videoRef.current.srcObject}
+            width={dimensionsCard.width - dimensionsVolumeButton.width - 40}
+          />
         )}
       </CardActions>
     </Card>
