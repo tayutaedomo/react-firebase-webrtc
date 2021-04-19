@@ -10,6 +10,7 @@ import {
 import useDimensions from './hooks/useDimensions';
 import VolumeButton from './molecules/VolumeButton';
 import RtcClient from '../utils/RtcClient';
+import AudioAnalyser from './web_audio/AudioAnalyser';
 
 type Props = {
   isLocal: boolean;
@@ -46,6 +47,9 @@ const Video: VFC<Props> = (props) => {
           rtcClient={rtcClient}
           isLocal={isLocal}
         />
+        {!muted && videoRef.current && videoRef.current.srcObject && (
+          <AudioAnalyser audio={videoRef.current.srcObject} />
+        )}
       </CardActions>
     </Card>
   );
